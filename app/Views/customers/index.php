@@ -57,7 +57,7 @@
 
 <main>
     <h1>Customer Accounts</h1>
-
+<a href="<?= site_url('customers/new') ?>">Add New Customer</a><th>Actions</th>
     <table>
         <thead>
             <tr>
@@ -74,6 +74,16 @@
                     <td><?= esc($customer['email']) ?></td>
                     <td><?= esc($customer['phone']) ?></td>
                 </tr>
+                <td>
+    <a href="<?= site_url(
+        'customers/' . $customer['id'] . '/edit'
+    ) ?>">
+        Edit
+    </a>
+</td>
+<?php if ($success = session()->getFlashdata('success')): ?>
+    <p style="color: green;"><?= esc($success) ?></p>
+<?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

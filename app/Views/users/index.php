@@ -56,27 +56,74 @@
 <?= view('partials/navigation') ?>
 
 <main>
-    <h1>User Accounts</h1>
+<h1>User Accounts</h1>
 
-    <table>
-        <thead>
+<h1>User Accounts</h1>
+
+<?php if ($success = session()->getFlashdata('success')): ?>
+    <p style="color: green;"><?= esc($success) ?></p>
+<?php endif; ?>
+
+<p>
+    <a href="<?= site_url('users/new') ?>">Add New User</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Avatar</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <?php foreach ($users as $user): ?>
+            <?php
+                $hasAvatar = ! empty($user['avatar'])
+                    && is_file(
+                        FCPATH
+                        . 'uploads/avatars/'
+                        . basename($user['avatar'])
+                    );
+
+                $avatarUrl = $hasAvatar
+                    ? base_url(
+                        'uploads/avatars/'
+                        . rawurlencode($user['avatar'])
+                    )
+                    : base_url('images/default-avatar.svg');
+            ?>
+
             <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Role</th>
-            </tr>
-        </thead>
+                <td>
+                    <img
+                        src="<?= esc($avatarUrl) ?>"
+                        alt="<?= esc($user['full_name']) ?> avatar"
+                        width="60"
+                        height="60"
+                        style="
+                            object-fit: cover;
+                            border-radius: 50%;
+                        "
+                    >
+                </td>
 
-        <tbody>
-            <?php foreach ($users as $user): ?>
-                <tr>
-                    <td><?= esc($user['username']) ?></td>
-                    <td><?= esc($user['full_name']) ?></td>
-                    <td><?= esc($user['role']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                <td><?= esc($user['username']) ?></td>
+                <td><?= esc($user['full_name']) ?></td>
+
+                <td>
+                    <a href="<?= site_url(
+                        'users/' . $user['id'] . '/edit'
+                    ) ?>">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 </main>
 
 </body>
